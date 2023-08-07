@@ -1,9 +1,18 @@
 from django.contrib.auth.decorators import login_required
 from .forms import AddLeadForm
 from django.shortcuts import render, redirect
+from .models import Lead
 
 
 @login_required
+
+def leads_list(request):
+    leads = Lead.objects.filter(created_by= request.user)
+
+    return render(request, 'lead/leads_list.html', {
+        'leads': leads
+    })
+
 def add_lead(request):
     if request.method == 'POST':
         form = AddLeadForm(request.POST)
