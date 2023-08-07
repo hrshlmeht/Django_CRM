@@ -1,17 +1,26 @@
 from django.contrib.auth.decorators import login_required
 from .forms import AddLeadForm
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Lead
 
 
 @login_required
-
 def leads_list(request):
-    leads = Lead.objects.filter(created_by= request.user)
+    leads = Lead.objects.filter(created_by=request.user)
 
     return render(request, 'lead/leads_list.html', {
         'leads': leads
     })
+
+
+@login_required
+def leads_detail(request, pk):
+    lead = get_object_or_404(Lead, created_by=request.user,pk=pk)
+
+    return render(request, 'lead/leads_detail.html', {
+        'lead': lead
+    })
+
 
 def add_lead(request):
     if request.method == 'POST':
