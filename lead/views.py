@@ -1,6 +1,8 @@
 from django.contrib.auth.decorators import login_required
-from .forms import AddLeadForm
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from .forms import AddLeadForm
+
 from .models import Lead
 
 
@@ -21,7 +23,39 @@ def leads_detail(request, pk):
         'lead': lead
     })
 
+@login_required
+def leads_delete(request ,pk):
+    lead = get_object_or_404(Lead, created_by=request.user, pk=pk)
+    lead.delete()
 
+    messages.success(request,'The lead was deleted')
+
+    return redirect('leads_list')
+
+
+
+@login_required
+def leads_edit(request , pk):
+    lead = get_object_or_404(Lead, created_by=request.user, pk=pk)
+    if request.method == 'POST':
+        form = AddLeadForm(request.POST , instance=lead)
+        if form.is_valid():
+            form.save()
+
+            messages.success(request, 'The changes for lead were saved.')
+
+            return redirect('leads_list')
+    else:
+        form = AddLeadForm(instance=lead)
+
+    return render(request, 'lead/leads_edit.html', {
+        'form': form
+    })
+
+
+
+
+@login_required
 def add_lead(request):
     if request.method == 'POST':
         form = AddLeadForm(request.POST)
@@ -31,7 +65,8 @@ def add_lead(request):
             lead.created_by = request.user
             lead.save()
 
-            return redirect('dashboard')
+            messages.success(request, 'The lead was created and added successfully')
+            return redirect('leads_list')
 
     else:
         form = AddLeadForm()
