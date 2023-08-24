@@ -4,9 +4,7 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from django.contrib import admin
 from django.contrib.auth import views
 from django.urls import path , include
-
 from core.views import index , about
-
 from userprofile.views import signup
 
 urlpatterns = [
