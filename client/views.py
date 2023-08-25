@@ -50,3 +50,22 @@ def clients_delete(request, pk):
 
     return redirect('clients_list')
 
+
+
+@login_required
+def clients_edit(request, pk):
+    client = get_object_or_404(Client, created_by=request.user, pk=pk)
+    if request.method == 'POST':
+        form = AddClientForm(request.POST, instance=client)
+        if form.is_valid():
+            form.save()
+
+            messages.success(request, 'The changes for client were saved.')
+
+            return redirect('clients_list')
+    else:
+        form = AddClientForm(instance=client)
+
+    return render(request, 'client/clients_edit.html', {
+        'form': form
+    })
