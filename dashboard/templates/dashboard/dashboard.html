@@ -3,6 +3,23 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-    <h1 class = "text-xl">Dashboard</h1>
+<div class="py-6 px-6">
+    <h1 class="text-xl">Dashboard</h1>
 
+    <div class="flex space-x-4">
+        <div class="w-1/2 px-4 py-6 bg-teal-200 hover:bg-teal-300 transition duration-300 rounded-xl border-2 border-teal-600 hover:border-teal-700 leads">
+            <h2 class="text-lg">Newest Leads</h2>
+            {% for lead in leads %}
+                <div class="lead">
+                    <h3 class = "font-semibold">{{ lead.name }}</h3>
+                </div>
+
+            {% endfor %}
+        </div>
+
+        <div class="w-1/2 px-4 py-6 bg-red-200 hover:bg-red-300 transition duration-300 rounded-xl border-2 border-red-900 hover:border-red-800 clients">
+            <h2 class="text-lg">Newest Clients</h2>
+        </div>
+    </div>
+</div>
 {% endblock %}
