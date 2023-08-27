@@ -4,6 +4,8 @@ from .models import Client
 from .forms import AddClientForm
 from django.contrib import messages
 
+from team.models import Team
+
 @login_required
 def clients_list(request):
     clients = Client.objects.filter(created_by=request.user)
@@ -26,9 +28,11 @@ def clients_add(request):
         form = AddClientForm(request.POST)
 
         if form.is_valid():
-            lead = form.save(commit=False)
-            lead.created_by = request.user
-            lead.save()
+            team = Team.objects.filter(created_by= request.user)[0]
+            client = form.save(commit=False)
+            client.created_by = request.user
+            client.team = team
+            client.save()
 
             messages.success(request, 'The client is added.')
             return redirect('clients_list')
